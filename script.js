@@ -1,6 +1,3 @@
-// Přepínač: zatím bez backendu
-const USE_BACKEND = true;
-
 // TADY si každý student nastaví svoje údaje (až bude backend):
 const BACKEND_URL = "https://web-render-service.onrender.com/chat";
 const STUDENT_ID = "Tomas_Trisko_4ITE";
@@ -9,6 +6,7 @@ const form = document.getElementById("question-form");
 const textarea = document.getElementById("question");
 const emailInput = document.getElementById("email");
 const answerDiv = document.getElementById("answer");
+const submitBtn = document.getElementById("submit-btn");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -17,13 +15,16 @@ form.addEventListener("submit", async (e) => {
   const email = emailInput.value.trim();
 
   if (!text) {
+    answerDiv.className = "error";
     answerDiv.textContent = "Nejdřív napiš dotaz.";
     return;
   }
 
-  // vždy ukážeme "loading"
-  answerDiv.textContent = "Zpracovávám dotaz…";
-  form.querySelector("button").disabled = true;
+  // Nastavení loading stavu
+  answerDiv.className = "loading";
+  answerDiv.textContent = "Zpracovávám dotaz, vyčkejte prosím…";
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Odesílám…";
 
   try {
     const payload = {
@@ -32,8 +33,10 @@ form.addEventListener("submit", async (e) => {
       email: email || null
     };
 
-    // --- FAKE MODE (bez backendu) ---
+    // --- DEMO MODE (bez backendu) ---
     if (!USE_BACKEND) {
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulace načítání
+      answerDiv.className = "";
       answerDiv.textContent =
         `Demo odpověď (bez serveru)\n\n` +
         `Student: ${payload.student}\n` +
@@ -48,25 +51,28 @@ form.addEventListener("submit", async (e) => {
       body: JSON.stringify(payload)
     });
 
+    const data = await res.json();
+
     if (!res.ok) {
-      answerDiv.textContent = "Server vrátil chybu: " + res.status;
+      answerDiv.className = "error";
+      answerDiv.textContent = "Chyba serveru: " + (data.error || res.statusText);
       return;
     }
 
-    const data = await res.json();
-
     if (data.reply) {
+      answerDiv.className = "";
       answerDiv.textContent = data.reply;
-    } else if (data.error) {
-      answerDiv.textContent = "Chyba serveru: " + data.error;
+      textarea.value = ""; // Vyčištění pole až po úspěšném odeslání
     } else {
+      answerDiv.className = "error";
       answerDiv.textContent = "Server nevrátil žádnou odpověď.";
     }
   } catch (err) {
     console.error(err);
-    answerDiv.textContent = "Nepodařilo se spojit se serverem.";
+    answerDiv.className = "error";
+    answerDiv.textContent = "Nepodařilo se spojit se serverem. Zkontroluj připojení.";
   } finally {
-    form.querySelector("button").disabled = false;
-    textarea.value = "";
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Odeslat dotaz";
   }
 });
