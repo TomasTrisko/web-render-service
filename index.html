@@ -2,38 +2,41 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Technická podpora – VDF Games</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Technická podpora – VDF Games X</h1>
 
-  <p>
-    Jak ti můžeme pomoct? Napiš, jaký máš problém.
-  </p>
+  <div class="container">
+    <h1>Technická podpora – VDF Games</h1>
+    <p class="subtitle">Jak ti můžeme pomoct? Napiš, jaký máš problém.</p>
 
-  <form id="question-form">
-    <label for="question">Tvůj dotaz:</label><br>
-    <textarea
-      id="question"
-      rows="5"
-      placeholder="Např.: Po poslední aktualizaci se mi hra nespustí..."
-    ></textarea>
+    <form id="question-form">
+      <div class="form-group">
+        <label for="question">Tvůj dotaz:</label>
+        <textarea
+          id="question"
+          rows="5"
+          placeholder="Např.: Po poslední aktualizaci se mi hra nespustí..."
+          required
+        ></textarea>
+      </div>
 
-    <!-- volitelně, polepro zadání emailu -->
-    <label for="email">E-mail (nepovinné):</label><br>
-    <input
-      type="email"
-      id="email"
-      placeholder="tvuj@email.cz"
-    >
+      <div class="form-group">
+        <label for="email">E-mail (nepovinné):</label>
+        <input
+          type="email"
+          id="email"
+          placeholder="tvuj@email.cz"
+        >
+      </div>
 
-    <button type="submit">Odeslat dotaz</button>
-  </form>
+      <button type="submit" id="submit-btn">Odeslat dotaz</button>
+    </form>
 
-  <h2>Odpověď podpory:</h2>
-  <div id="answer">
-    Zatím žádný dotaz.
+    <h2>Odpověď podpory:</h2>
+    <div id="answer">Zatím žádný dotaz.</div>
   </div>
 
   <script src="script.js"></script>
