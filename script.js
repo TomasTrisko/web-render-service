@@ -1,16 +1,16 @@
-// Přepínač pro zapnutí backendu
+// 1. Nastavení backendu (přesně název USE_BACKEND)
 const USE_BACKEND = true;
-
-// Tvoje Render URL a ID studenta
 const BACKEND_URL = "https://web-render-service.onrender.com/chat";
 const STUDENT_ID = "Tomas_Trisko_4ITE";
 
+// 2. Elementy z DOM
 const form = document.getElementById("question-form");
 const textarea = document.getElementById("question");
 const emailInput = document.getElementById("email");
 const answerDiv = document.getElementById("answer");
 const submitBtn = document.getElementById("submit-btn");
 
+// 3. Posluchač události formuláře
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -23,11 +23,13 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  // Nastavení stavu načítání
   answerDiv.className = "loading";
   answerDiv.textContent = "Zpracovávám dotaz, vyčkejte prosím…";
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Odesílám…";
+  
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Odesílám…";
+  }
 
   try {
     const payload = {
@@ -36,7 +38,7 @@ form.addEventListener("submit", async (e) => {
       email: email || null
     };
 
-    // --- DEMO MODE (bez backendu) ---
+    // Pokud je USE_BACKEND false, vrátí demo
     if (!USE_BACKEND) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       answerDiv.className = "";
@@ -47,7 +49,7 @@ form.addEventListener("submit", async (e) => {
       return;
     }
 
-    // --- REAL MODE (s backendem) ---
+    // Volání Flask backendu
     const res = await fetch(BACKEND_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -65,7 +67,7 @@ form.addEventListener("submit", async (e) => {
     if (data.reply) {
       answerDiv.className = "";
       answerDiv.textContent = data.reply;
-      textarea.value = ""; // Vyčištění vstupu po úspěšném odeslání
+      textarea.value = "";
     } else {
       answerDiv.className = "error";
       answerDiv.textContent = "Server nevrátil žádnou odpověď.";
@@ -75,7 +77,9 @@ form.addEventListener("submit", async (e) => {
     answerDiv.className = "error";
     answerDiv.textContent = "Nepodařilo se spojit se serverem. Zkontroluj připojení.";
   } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Odeslat dotaz";
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Odeslat dotaz";
+    }
   }
 });
