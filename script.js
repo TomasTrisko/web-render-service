@@ -1,5 +1,8 @@
-// TADY si každý student nastaví svoje údaje (až bude backend):
-const BACKEND_URL = "https://web-render-service.onrender.com";
+// Přepínač pro zapnutí backendu
+const USE_BACKEND = true;
+
+// Tvoje Render URL a ID studenta
+const BACKEND_URL = "https://web-render-service.onrender.com/chat";
 const STUDENT_ID = "Tomas_Trisko_4ITE";
 
 const form = document.getElementById("question-form");
@@ -20,7 +23,7 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  // Nastavení loading stavu
+  // Nastavení stavu načítání
   answerDiv.className = "loading";
   answerDiv.textContent = "Zpracovávám dotaz, vyčkejte prosím…";
   submitBtn.disabled = true;
@@ -35,7 +38,7 @@ form.addEventListener("submit", async (e) => {
 
     // --- DEMO MODE (bez backendu) ---
     if (!USE_BACKEND) {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulace načítání
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       answerDiv.className = "";
       answerDiv.textContent =
         `Demo odpověď (bez serveru)\n\n` +
@@ -62,7 +65,7 @@ form.addEventListener("submit", async (e) => {
     if (data.reply) {
       answerDiv.className = "";
       answerDiv.textContent = data.reply;
-      textarea.value = ""; // Vyčištění pole až po úspěšném odeslání
+      textarea.value = ""; // Vyčištění vstupu po úspěšném odeslání
     } else {
       answerDiv.className = "error";
       answerDiv.textContent = "Server nevrátil žádnou odpověď.";
