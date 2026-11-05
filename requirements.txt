@@ -1,3 +1,4 @@
 flask
 flask-cors
 gunicorn
+from google import genai
