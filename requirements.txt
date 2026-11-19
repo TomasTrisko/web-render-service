@@ -1,9 +1,4 @@
 flask
 flask-cors
 gunicorn
-from google import genai
-from google.genai import types
-
-client = genai.Client(
-    http_options=types.HttpOptions(api_version='v1beta')
-)
+google-genai
