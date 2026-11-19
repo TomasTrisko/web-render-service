@@ -21,7 +21,14 @@ app.config["MAX_CONTENT_LENGTH"] = 32 * 1024
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 
-client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
+client = (
+    genai.Client(
+        api_key=GEMINI_API_KEY,
+        http_options=types.HttpOptions(api_version="v1beta"),
+    )
+    if GEMINI_API_KEY
+    else None
+)
 
 # ------------------------------------------------------------
 # 2. Firemní dokumentace
